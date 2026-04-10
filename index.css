@@ -166,20 +166,71 @@ html.dark .glass-card:hover {
   cursor: grabbing;
 }
 
+/* State Modifiers for visual distinction */
+
+/* IDLE STATE: subdued, ready to start */
+.timer-item.state-IDLE {
+  border-color: rgba(138, 122, 114, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  background: rgba(255, 255, 255, 0.3);
+}
+html.dark .timer-item.state-IDLE {
+  border-color: rgba(154, 148, 142, 0.1);
+  background: rgba(30, 32, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.timer-item.state-IDLE .timer-display,
+.timer-item.state-IDLE .timer-title {
+  color: var(--text-muted);
+}
+.timer-item.state-IDLE .timer-progress-bar {
+  opacity: 0.3;
+}
+
+/* RUNNING STATE: default active state */
+.timer-item.state-RUNNING {
+  border-color: rgba(198, 142, 115, 0.3); /* Accent tint border */
+  box-shadow: 0 8px 32px rgba(198, 142, 115, 0.15);
+}
+html.dark .timer-item.state-RUNNING {
+  border-color: rgba(212, 175, 55, 0.25);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.12);
+}
+
+/* PAUSED STATE: suspended action */
+.timer-item.state-PAUSED {
+  border-color: rgba(209, 154, 79, 0.4); 
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(209, 154, 79, 0.08);
+}
+html.dark .timer-item.state-PAUSED {
+  border-color: rgba(209, 154, 79, 0.3);
+  background: rgba(30, 32, 38, 0.4);
+  box-shadow: 0 8px 24px rgba(209, 154, 79, 0.1);
+}
+.timer-item.state-PAUSED .timer-display {
+  opacity: 0.6;
+}
+
+/* FINISHED STATE: alerting, completed */
 .timer-item.state-FINISHED {
   border-color: var(--danger-color);
+  background: rgba(194, 92, 92, 0.03);
   animation: pulse-elegant 2.5s infinite;
+}
+html.dark .timer-item.state-FINISHED {
+  background: rgba(209, 86, 86, 0.05);
 }
 
 /* The elegant pulse */
 @keyframes pulse-elegant {
-  0% { box-shadow: 0 0 0 0 rgba(194, 92, 92, 0.4); }
-  60% { box-shadow: 0 0 0 18px rgba(194, 92, 92, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(194, 92, 92, 0.3); }
+  60% { box-shadow: 0 0 0 14px rgba(194, 92, 92, 0); }
   100% { box-shadow: 0 0 0 0 rgba(194, 92, 92, 0); }
 }
 html.dark @keyframes pulse-elegant {
-  0% { box-shadow: 0 0 0 0 rgba(209, 86, 86, 0.4); }
-  60% { box-shadow: 0 0 0 18px rgba(209, 86, 86, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(209, 86, 86, 0.3); }
+  60% { box-shadow: 0 0 0 14px rgba(209, 86, 86, 0); }
   100% { box-shadow: 0 0 0 0 rgba(209, 86, 86, 0); }
 }
 
