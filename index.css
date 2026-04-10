@@ -547,29 +547,6 @@ html.dark .keypad-btn:hover {
   margin-bottom: 0.5rem;
 }
 
-.dismiss-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(240, 230, 224, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 10;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  border-radius: var(--border-radius);
-}
-html.dark .dismiss-overlay {
-  background: rgba(13, 14, 18, 0.7);
-}
-.timer-item.state-FINISHED:hover .dismiss-overlay {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 @media (max-width: 600px) {
   .app-container {
     padding: 1.5rem 1rem;
@@ -582,14 +559,5 @@ html.dark .dismiss-overlay {
   }
   .timer-display {
     font-size: 3rem;
-  }
-  .timer-item.state-FINISHED .dismiss-overlay {
-    opacity: 1;
-    pointer-events: auto;
-    background: transparent;
-    align-items: flex-end;
-    padding-bottom: 1.5rem;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 }

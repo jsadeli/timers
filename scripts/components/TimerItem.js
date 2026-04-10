@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { html, formatTime } from '../utils.js';
-import { Play, Pause, Trash2, RotateCcw, X, GripVertical } from '../icons.js';
+import { Play, Pause, Trash2, RotateCcw, X, GripVertical, Square } from '../icons.js';
 
 export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged, onDragStart, onDragEnter, onDragEnd }) {
   const [now, setNow] = useState(Date.now());
@@ -142,28 +142,45 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
       </div>
       
       <div className="timer-controls">
-        <button 
-          className="btn-icon-large" 
-          onClick=${handlePauseResume}
-          disabled=${timerCore.state === 'FINISHED'}
-          title=${timerCore.state === 'RUNNING' ? 'Pause' : 'Start'}
-        >
-          ${timerCore.state === 'RUNNING' ? html`<${Pause} size=${24} />` : html`<${Play} size=${24} />`}
-        </button>
-        <button 
-          className="btn-icon-large" 
-          onClick=${handleRestart}
-          title="Restart"
-        >
-          <${RotateCcw} size=${24} />
-        </button>
-      </div>
-      
-      <div className="dismiss-overlay">
-        <button className="btn-primary" onClick=${() => onDismiss(timerCore.id)}>
-          <${X} size=${20} />
-          <span>Dismiss</span>
-        </button>
+        ${(timerCore.state === 'RUNNING' || timerCore.state === 'PAUSED') ? html`
+          <button 
+            className="btn-icon-large" 
+            onClick=${handlePauseResume}
+            title=${timerCore.state === 'RUNNING' ? 'Pause' : 'Resume'}
+          >
+            ${timerCore.state === 'RUNNING' ? html`<${Pause} size=${24} />` : html`<${Play} size=${24} />`}
+          </button>
+          <button 
+            className="btn-icon-large" 
+            onClick=${() => { timerCore.reset(); onUpdate(); }}
+            title="Cancel"
+          >
+            <${Square} size=${22} />
+          </button>
+        ` : timerCore.state === 'FINISHED' ? html`
+          <button 
+            className="btn-icon-large" 
+            onClick=${handleRestart}
+            title="Restart"
+          >
+            <${RotateCcw} size=${24} />
+          </button>
+          <button 
+            className="btn-icon-large" 
+            onClick=${() => onDismiss(timerCore.id)}
+            title="Dismiss"
+          >
+            <${X} size=${24} />
+          </button>
+        ` : html`
+          <button 
+            className="btn-icon-large" 
+            onClick=${handlePauseResume}
+            title="Start"
+          >
+            <${Play} size=${24} />
+          </button>
+        `}
       </div>
 
     </div>
