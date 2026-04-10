@@ -135,6 +135,37 @@ html.dark .glass-card:hover {
   overflow: hidden;
 }
 
+/* Drag & Drop */
+.timer-item.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  border-style: dashed;
+}
+
+.drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  opacity: 0.5;
+  transition: all 0.2s ease;
+  padding: 4px;
+  margin-left: -8px;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+  color: var(--text-color);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
 .timer-item.state-FINISHED {
   border-color: var(--danger-color);
   animation: pulse-elegant 2.5s infinite;

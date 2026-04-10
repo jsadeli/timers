@@ -1,4 +1,4 @@
 import React from 'react';
-import { Play, Pause, Square, Trash2, Edit2, RotateCcw, Plus, X, Moon, Sun, Monitor, BellRing, BellOff } from 'lucide-react';
+import { Play, Pause, Square, Trash2, Edit2, RotateCcw, Plus, X, Moon, Sun, Monitor, BellRing, BellOff, GripVertical } from 'lucide-react';
 
-export { Play, Pause, Square, Trash2, Edit2, RotateCcw, Plus, X, Moon, Sun, Monitor, BellRing, BellOff };
+export { Play, Pause, Square, Trash2, Edit2, RotateCcw, Plus, X, Moon, Sun, Monitor, BellRing, BellOff, GripVertical };

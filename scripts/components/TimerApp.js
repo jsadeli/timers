@@ -12,6 +12,7 @@ export function TimerApp() {
   const [timers, setTimers] = useState([]);
   const [theme, setTheme] = useState(ThemeManager.getTheme());
   const tickIntervalRef = useRef(null);
+  const [draggedTimerId, setDraggedTimerId] = useState(null);
 
   // Initial load
   useEffect(() => {
@@ -75,6 +76,35 @@ export function TimerApp() {
       clearInterval(tickIntervalRef.current);
       tickIntervalRef.current = null;
     }
+  };
+
+  const handleDragStart = (id) => {
+    setDraggedTimerId(id);
+  };
+
+  const handleDragEnter = (targetId) => {
+    if (!draggedTimerId || draggedTimerId === targetId) return;
+
+    setTimers(prevTimers => {
+      const draggedIndex = prevTimers.findIndex(t => t.id === draggedTimerId);
+      const targetIndex = prevTimers.findIndex(t => t.id === targetId);
+
+      if (draggedIndex < 0 || targetIndex < 0) return prevTimers;
+
+      const newTimers = [...prevTimers];
+      const [draggedItem] = newTimers.splice(draggedIndex, 1);
+      newTimers.splice(targetIndex, 0, draggedItem);
+      
+      return newTimers;
+    });
+  };
+
+  const handleDragEnd = () => {
+    setDraggedTimerId(null);
+    setTimers(prevTimers => {
+      StorageProvider.saveTimers(prevTimers.map(t => t.toJSON()));
+      return prevTimers;
+    });
   };
 
   const handleAddTimer = (newTimer) => {
@@ -174,6 +204,10 @@ export function TimerApp() {
               onUpdate=${handleUpdateTimer}
               onDelete=${() => handleDeleteTimer(timer.id)}
               onDismiss=${handleDismissTimer}
+              isDragged=${draggedTimerId === timer.id}
+              onDragStart=${() => handleDragStart(timer.id)}
+              onDragEnter=${() => handleDragEnter(timer.id)}
+              onDragEnd=${handleDragEnd}
             />
           `)}
         </div>

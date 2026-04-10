@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { html, formatTime } from '../utils.js';
-import { Play, Pause, Trash2, RotateCcw, X } from '../icons.js';
+import { Play, Pause, Trash2, RotateCcw, X, GripVertical } from '../icons.js';
 
-export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss }) {
+export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged, onDragStart, onDragEnter, onDragEnd }) {
   const [now, setNow] = useState(Date.now());
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(timerCore.label);
@@ -81,9 +81,26 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss }) {
   };
 
   return html`
-    <div className=${`glass-card timer-item state-${timerCore.state}`}>
+    <div 
+      className=${`glass-card timer-item state-${timerCore.state} ${isDragged ? 'dragging' : ''}`}
+      draggable="true"
+      onDragStart=${(e) => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', timerCore.id);
+        setTimeout(() => onDragStart(), 0);
+      }}
+      onDragEnter=${(e) => {
+        e.preventDefault();
+        onDragEnter();
+      }}
+      onDragOver=${(e) => e.preventDefault()}
+      onDragEnd=${onDragEnd}
+    >
       
       <div className="timer-header">
+        <div className="drag-handle" title="Drag to reorder">
+          <${GripVertical} size=${20} />
+        </div>
         ${isEditingTitle ? html`
           <input
             className="timer-title-input"
