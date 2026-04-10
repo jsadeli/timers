@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { html, formatTime } from '../utils.js';
 import { Play, Pause, Trash2, RotateCcw, X, GripVertical, Square } from '../icons.js';
+import { AlarmCoordinator } from '../core/AlarmCoordinator.js';
 
 export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged, onDragStart, onDragEnter, onDragEnd }) {
   const [now, setNow] = useState(Date.now());
@@ -38,6 +39,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
   };
 
   const handleRestart = () => {
+    AlarmCoordinator.stopAlarm(timerCore.id);
     timerCore.reset();
     timerCore.start();
     onUpdate();
@@ -152,7 +154,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
           </button>
           <button 
             className="btn-icon-large" 
-            onClick=${() => { timerCore.reset(); onUpdate(); }}
+            onClick=${() => { AlarmCoordinator.stopAlarm(timerCore.id); timerCore.reset(); onUpdate(); }}
             title="Cancel"
           >
             <${Square} size=${22} />
