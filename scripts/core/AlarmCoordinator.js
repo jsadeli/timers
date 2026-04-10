@@ -5,6 +5,8 @@ export class AlarmCoordinator {
   static loopInterval = null;
   static loopDurationMs = 5000;
 
+  static isMuted = false;
+
   static initAudio() {
     if (!this.audioCtx) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -18,8 +20,12 @@ export class AlarmCoordinator {
     this.loopDurationMs = ms;
   }
 
+  static setIsMuted(muted) {
+    this.isMuted = muted;
+  }
+
   static playChime() {
-    if (!this.audioCtx) return;
+    if (this.isMuted || !this.audioCtx) return;
     
     if (this.audioCtx.state === 'suspended') {
       this.audioCtx.resume();

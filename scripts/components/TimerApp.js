@@ -6,16 +6,18 @@ import { StorageProvider } from '../core/StorageProvider.js';
 import { ThemeManager } from '../core/ThemeManager.js';
 import { AddTimer } from './AddTimer.js';
 import { TimerItem } from './TimerItem.js';
-import { Moon, Sun, Monitor, BellRing } from '../icons.js';
+import { Moon, Sun, Monitor, BellRing, BellOff } from '../icons.js';
 
 export function TimerApp() {
   const [timers, setTimers] = useState([]);
   const [theme, setTheme] = useState(ThemeManager.getTheme());
   const tickIntervalRef = useRef(null);
   const [draggedTimerId, setDraggedTimerId] = useState(null);
+  const [isMuted, setIsMuted] = useState(() => StorageProvider.getSettings().isMuted || false);
 
   // Initial load
   useEffect(() => {
+    AlarmCoordinator.setIsMuted(isMuted);
     const saved = StorageProvider.getTimers();
     const loadedTimers = saved.map(t => TimerCore.fromJSON(t));
     setTimers(loadedTimers);
@@ -138,6 +140,14 @@ export function TimerApp() {
     ThemeManager.setTheme(newTheme);
     setTheme(newTheme);
   };
+
+  const toggleMute = () => {
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    AlarmCoordinator.setIsMuted(newMuted);
+    const settings = StorageProvider.getSettings();
+    StorageProvider.saveSettings({ ...settings, isMuted: newMuted });
+  };
   
   // Keyboard shortcuts
   useEffect(() => {
@@ -172,8 +182,19 @@ export function TimerApp() {
       <header>
         <h1>Timers</h1>
         
-        <div className="theme-toggle">
-          <button 
+        <div style=${{display: 'flex', gap: '0.75rem', alignItems: 'center'}}>
+          <div className="theme-toggle">
+            <button 
+              className="theme-btn"
+              onClick=${toggleMute}
+              title=${isMuted ? "Unmute Alarms" : "Mute Alarms"}
+            >
+              ${isMuted ? html`<${BellOff} size=${16} />` : html`<${BellRing} size=${16} />`}
+            </button>
+          </div>
+
+          <div className="theme-toggle">
+            <button 
             className=${`theme-btn ${theme === 'light' ? 'active' : ''}`}
             onClick=${() => toggleTheme('light')}
             title="Light Mode"
@@ -190,6 +211,7 @@ export function TimerApp() {
             onClick=${() => toggleTheme('dark')}
             title="Dark Mode"
           ><${Moon} size=${16}/></button>
+        </div>
         </div>
       </header>
       
