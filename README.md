@@ -26,6 +26,16 @@ No `npm install`, Webpack, or Vite is required. Simply spin up a local developme
    ```
 3. Open your web browser and navigate to `http://localhost:8000`.
 
+> [!NOTE]
+> This app's original intention is to be a simple project that requires no build/compilation stage
+> and ease of deployment. Generally not a recommended approach for larger apps/projects, because
+> this has known limitations such as:
+>
+> - using in-browser Babel compilation for JSX (less performant)
+> - no performance optimizations (e.g., React 19's memoization)
+> - partial TypeScript support
+> - no minification process for final delivery
+
 ## How it works
 
 The architecture relies entirely on native browser features in combination with local ESM React bundles.
@@ -41,3 +51,12 @@ The architecture relies entirely on native browser features in combination with 
 - **Thematic Elements:** Swap between Dark, Light, and Auto themes using the interface's top right icon.
 - **Visuals:** Advanced customization of the application's look, feel, and colors can be handled by adjusting the CSS custom properties (variables) defined at the top of `index.css`.
 - **Audio Overrides:** The muted state and sound properties can be extended or deactivated right from the UI, or custom audio elements can be appended to the `assets` folder.
+
+## License
+
+This project is open source and available for personal, commercial, and educational use.
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you
+want to contribute.
