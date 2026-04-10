@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { html, generateId } from '../utils.js';
 import { TimerCore } from '../core/TimerCore.js';
-import { Play } from '../icons.js';
+import { Play, Plus, X } from '../icons.js';
 
 export function AddTimer({ onAdd }) {
   const [input, setInput] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
   
   const handleDigit = (d) => {
     if (input === '0' && d === '0') return;
@@ -41,6 +42,7 @@ export function AddTimer({ onAdd }) {
       newTimer.start();
       onAdd(newTimer);
       setInput('');
+      setIsExpanded(false);
     }
   };
 
@@ -53,10 +55,35 @@ export function AddTimer({ onAdd }) {
     `;
   };
 
+  if (!isExpanded) {
+    return html`
+      <div className="add-timer-section" style=${{ marginBottom: '2rem' }}>
+        <button 
+          className="btn-primary" 
+          style=${{ padding: '1rem 2rem', fontSize: '1.25rem', borderRadius: '9999px', boxShadow: 'var(--card-shadow)' }}
+          onClick=${() => setIsExpanded(true)}
+        >
+          <${Plus} size=${24} />
+          <span>New Timer</span>
+        </button>
+      </div>
+    `;
+  }
+
   return html`
     <div className="add-timer-section">
-      <div className="glass-card add-timer-card">
-        <div className="keypad-display-wrapper">
+      <div className="glass-card add-timer-card" style=${{ position: 'relative' }}>
+        <button 
+           className="btn-icon" 
+           style=${{ position: 'absolute', top: '1rem', right: '1rem' }}
+           onClick=${() => setIsExpanded(false)}
+           aria-label="Close"
+           title="Cancel"
+        >
+           <${X} size=${20} />
+        </button>
+
+        <div className="keypad-display-wrapper" style=${{ marginTop: '1.5rem' }}>
           <div className="keypad-display">
             ${formattedDisplay()}
           </div>
