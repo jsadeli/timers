@@ -31,12 +31,27 @@ export function AddTimer({ onAdd }) {
     return (h * 3600 + m * 60 + s) * 1000;
   };
   
+  const formatTimerLabel = (val) => {
+    if (!val) return 'Timer';
+    const padded = val.padStart(6, '0');
+    const h = parseInt(padded.slice(0, 2), 10);
+    const m = parseInt(padded.slice(2, 4), 10);
+    const s = parseInt(padded.slice(4, 6), 10);
+    
+    const parts = [];
+    if (h > 0) parts.push(`${h} hr${h > 1 ? 's' : ''}`);
+    if (m > 0) parts.push(`${m} min${m > 1 ? 's' : ''}`);
+    if (s > 0) parts.push(`${s} sec${s > 1 ? 's' : ''}`);
+    
+    return parts.length > 0 ? parts.join(' ') : 'Timer';
+  };
+
   const handleStart = () => {
     const ms = parseMs(input);
     if (ms > 0) {
       const newTimer = new TimerCore({
         id: generateId(),
-        label: 'Timer',
+        label: formatTimerLabel(input),
         totalDurationMs: ms
       });
       newTimer.start();
