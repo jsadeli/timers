@@ -107,7 +107,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss }) {
         ${isEditingDuration ? html`
           <input
              className="timer-title-input"
-             style=${{ fontFamily: 'var(--font-mono)', fontSize: '3rem', textAlign: 'center', width: '100%' }}
+             style=${{ fontFamily: 'var(--font-sans)', fontVariantNumeric: 'tabular-nums', fontSize: '3rem', textAlign: 'center', width: '100%' }}
              value=${durationInput}
              onChange=${e => setDurationInput(e.target.value)}
              onBlur=${saveDuration}

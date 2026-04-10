@@ -156,7 +156,8 @@ h1 {
 }
 
 .timer-display {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
   font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
@@ -296,7 +297,8 @@ html.dark .btn-icon:hover {
 }
 
 .keypad-display {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
   font-size: 4rem;
   font-weight: 700;
   text-align: center;
