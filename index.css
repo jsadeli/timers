@@ -216,7 +216,8 @@ html.dark .timer-item.state-PAUSED {
 .timer-item.state-FINISHED {
   border-color: var(--danger-color);
   background: rgba(194, 92, 92, 0.03);
-  animation: pulse-elegant 2.5s infinite;
+  animation: pulse-elegant 2.5s infinite, gentle-vibrate 3s infinite ease-in-out;
+  transform-origin: center center;
 }
 html.dark .timer-item.state-FINISHED {
   background: rgba(209, 86, 86, 0.05);
@@ -232,6 +233,18 @@ html.dark @keyframes pulse-elegant {
   0% { box-shadow: 0 0 0 0 rgba(209, 86, 86, 0.3); }
   60% { box-shadow: 0 0 0 14px rgba(209, 86, 86, 0); }
   100% { box-shadow: 0 0 0 0 rgba(209, 86, 86, 0); }
+}
+
+@keyframes gentle-vibrate {
+  0%   { rotate: 0deg; translate: 0px 0; }
+  2%   { rotate: -1deg; translate: -2px 0; }
+  4%   { rotate: 1deg; translate: 2px 0; }
+  6%   { rotate: -1deg; translate: -2px 0; }
+  8%   { rotate: 1deg; translate: 2px 0; }
+  10%  { rotate: -0.5deg; translate: -1px 0; }
+  12%  { rotate: 0.5deg; translate: 1px 0; }
+  14%  { rotate: 0deg; translate: 0 0; }
+  100% { rotate: 0deg; translate: 0 0; }
 }
 
 .timer-header {
