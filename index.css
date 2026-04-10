@@ -216,7 +216,7 @@ html.dark .timer-item.state-PAUSED {
 .timer-item.state-FINISHED {
   border-color: var(--danger-color);
   background: rgba(194, 92, 92, 0.03);
-  animation: pulse-elegant 2.5s infinite, gentle-vibrate 3s infinite ease-in-out;
+  animation: pulse-elegant 2.5s infinite, gentle-vibrate var(--chime-interval, 3s) infinite ease-in-out;
   transform-origin: center center;
 }
 html.dark .timer-item.state-FINISHED {

@@ -108,3 +108,9 @@ export class AlarmCoordinator {
     this.activeAlertIds.clear();
   }
 }
+
+// Sync CSS with truth from JS
+document.documentElement.style.setProperty(
+  "--chime-interval",
+  `${AlarmCoordinator.chimeIntervalMs}ms`,
+);
