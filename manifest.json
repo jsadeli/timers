@@ -1,0 +1,17 @@
+{
+  "name": "Timers",
+  "short_name": "Timers",
+  "description": "A luxuriously refined offline-capable timer app.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
