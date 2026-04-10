@@ -17,14 +17,13 @@ A high-fidelity, offline-first React web app built with a "no-build" TypeScript 
 7. As a user, I want to edit a timer's name or duration even while it is active or paused.
 8. As a user, I want to delete a timer to clear my workspace.
 9. As a user, I want my timers to persist after a page refresh so that I don't lose track of my tasks.
-10. As a user, I want a single audible chime to play when one or more timers expire, rather than a cacophony of overlapping sounds.
-11. As a user, I want the alarm to loop for a configurable duration (default 5s) so it isn't intrusive but is noticeable.
-12. As a user, I want a visual alert for each finished timer so I know exactly which task requires my attention.
-13. As a user, I want to dismiss individual finished timers to stop the visual alert and the global alarm.
-14. As a user, I want the interface to adapt to my system's light or dark mode automatically.
-15. As a user, I want to manually toggle between Light, Dark, and Auto themes.
-16. As a user, I want to use the app on my iPhone with touch-friendly buttons and inputs.
-17. As a user, I want to use keyboard shortcuts (e.g., Space for pause/resume) for faster interaction on desktop.
+10. As a user, I want the alarm to loop for a configurable duration (default 30s) so it isn't intrusive but is noticeable.
+11. As a user, I want a visual alert for each finished timer so I know exactly which task requires my attention.
+12. As a user, I want to dismiss individual finished timers to stop the visual alert and the global alarm.
+13. As a user, I want the interface to adapt to my system's light or dark mode automatically.
+14. As a user, I want to manually toggle between Light, Dark, and Auto themes.
+15. As a user, I want to use the app on my iPhone with touch-friendly buttons and inputs.
+16. As a user, I want to use keyboard shortcuts (e.g., Space for pause/resume) for faster interaction on desktop.
 
 ## Implementation Decisions
 
