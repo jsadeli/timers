@@ -4,6 +4,10 @@
 
 A high-fidelity, offline-first React web application built entirely on a "no-build" architecture. It provides a clean, elegantly animated interface that supports tracking multiple concurrent timers. The application manages precise time tracking to provide accuracy without browser throttling and avoids the need for advanced bundling tools, delivering a premium user experience straight out of the box.
 
+Screenshot:
+
+![ss](images/SCR-20260411-cgbd.png)
+
 ## Features
 
 - **Concurrent Timers:** Track multiple tasks such as cooking, work sprints, and laundry side-by-side.
