@@ -23,3 +23,20 @@ export function formatTime(ms) {
 export function generateId() {
   return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
 }
+
+export function printDeveloperCredit() {
+  const art = [
+    '  ████████╗██╗███╗   ███╗███████╗██████╗ ███████╗',
+    '  ╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗██╔════╝',
+    '     ██║   ██║██╔████╔██║█████╗  ██████╔╝███████╗',
+    '     ██║   ██║██║╚██╔╝██║██╔══╝  ██╔══██╗╚════██║',
+    '     ██║   ██║██║ ╚═╝ ██║███████╗██║  ██║███████║',
+    '     ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝',
+  ].join('\n');
+  console.log('%c' + art, 'color: #3b82f6; font-family: monospace; font-weight: bold;');
+  console.log(
+    '%c Looking under the hood? %c This high-performance timer was crafted by Jeffrey Sadeli with the assistance of Gemini 3.1 Pro. ',
+    'color: #fff; background: #171717; padding: 6px; border-radius: 4px 0 0 4px; font-weight: bold; font-family: system-ui, sans-serif;',
+    'color: #171717; background: #3b82f6; padding: 6px; border-radius: 0 4px 4px 0; font-weight: bold; font-family: system-ui, sans-serif;'
+  );
+}

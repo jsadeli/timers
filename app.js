@@ -1,11 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { html } from './scripts/utils.js';
+import { html, printDeveloperCredit } from './scripts/utils.js';
 import { ThemeManager } from './scripts/core/ThemeManager.js';
 import { TimerApp } from './scripts/components/TimerApp.js';
 
 // Initialize Theme
 ThemeManager.init();
+
+// Developer Easter Egg
+printDeveloperCredit();
 
 // Render Root
 const rootElement = document.getElementById('root');
