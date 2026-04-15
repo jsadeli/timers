@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { html, formatTime } from '../utils.js';
+import { html, formatTime, formatTimeFull } from '../utils.js';
 import { Play, Pause, Trash2, RotateCcw, X, GripVertical, Square, Maximize2 } from '../icons.js';
 import { AlarmCoordinator } from '../core/AlarmCoordinator.js';
 
@@ -9,7 +9,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, onPresent,
   const [titleInput, setTitleInput] = useState(timerCore.label);
 
   const [isEditingDuration, setIsEditingDuration] = useState(false);
-  const [durationInput, setDurationInput] = useState(formatTime(timerCore.totalDurationMs));
+  const [durationInput, setDurationInput] = useState(formatTimeFull(timerCore.totalDurationMs));
 
   useEffect(() => {
     let animationFrameId;
@@ -58,7 +58,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, onPresent,
 
   const startDurationEdit = () => {
     // Only allow editing when paused or idle to easily input
-    setDurationInput(formatTime(timerCore.totalDurationMs));
+    setDurationInput(formatTimeFull(timerCore.totalDurationMs));
     setIsEditingDuration(true);
   };
 
