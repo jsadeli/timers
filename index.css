@@ -324,16 +324,43 @@ html.dark .timer-progress-container {
   background: var(--accent-color);
   border-radius: 4px;
   transition: background 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 0 10px var(--accent-color); /* a slight elegant glowing edge */
+  box-shadow: 0 0 10px var(--accent-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-progress-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 45%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.35) 55%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: pres-bar-shimmer 2.5s linear infinite;
 }
 
 .timer-item.state-PAUSED .timer-progress-bar {
   background: var(--warning-color);
   box-shadow: 0 0 10px var(--warning-color);
 }
+.timer-item.state-PAUSED .timer-progress-bar::after {
+  display: none;
+}
 .timer-item.state-FINISHED .timer-progress-bar {
   background: var(--danger-color);
   box-shadow: 0 0 10px var(--danger-color);
+}
+.timer-item.state-FINISHED .timer-progress-bar::after {
+  display: none;
+}
+.timer-item.state-IDLE .timer-progress-bar::after {
+  display: none;
 }
 
 .timer-controls {
