@@ -21,8 +21,8 @@
   --border-radius: 28px;
 }
 
-html[data-timer-font="outfit"] {
-  --font-timer: 'Outfit', sans-serif;
+html[data-timer-font="dmsans"] {
+  --font-timer: 'DM Sans', sans-serif;
 }
 
 html[data-timer-font="caveat"] {

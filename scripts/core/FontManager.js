@@ -1,6 +1,6 @@
 export const TIMER_FONTS = [
   { id: 'jetbrains', label: 'JetBrains Mono', family: "'JetBrains Mono', monospace" },
-  { id: 'outfit',    label: 'Outfit',          family: "'Outfit', sans-serif" },
+  { id: 'dmsans',   label: 'DM Sans',           family: "'DM Sans', sans-serif" },
   { id: 'caveat',    label: 'Caveat',            family: "'Caveat', cursive" },
 ];
 
