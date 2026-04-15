@@ -3,7 +3,7 @@ import { html, formatTime } from '../utils.js';
 import { Play, Pause, Trash2, RotateCcw, X, GripVertical, Square } from '../icons.js';
 import { AlarmCoordinator } from '../core/AlarmCoordinator.js';
 
-export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged, onDragStart, onDragEnter, onDragEnd }) {
+export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged, isFocused, onFocus, onDragStart, onDragEnter, onDragEnd }) {
   const [now, setNow] = useState(Date.now());
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(timerCore.label);
@@ -84,8 +84,10 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
 
   return html`
     <div 
-      className=${`glass-card timer-item state-${timerCore.state} ${isDragged ? 'dragging' : ''}`}
+      className=${`glass-card timer-item state-${timerCore.state} ${isDragged ? 'dragging' : ''} ${isFocused ? 'kbd-focused' : ''}`}
       draggable="true"
+      onClick=${onFocus}
+      tabIndex="0"
       onDragStart=${(e) => {
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', timerCore.id);

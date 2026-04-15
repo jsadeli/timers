@@ -574,3 +574,190 @@ html.dark .keypad-btn:hover {
     font-size: 3rem;
   }
 }
+
+/* ───────────────────────────────────────────────────────────────────
+   Keyboard Focus Ring (arrow-key navigation)
+─────────────────────────────────────────────────────────────────── */
+
+.timer-item.kbd-focused {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(198, 142, 115, 0.15), var(--card-shadow);
+}
+html.dark .timer-item.kbd-focused {
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.18), var(--card-shadow);
+}
+
+/* Remove native browser focus outline since we handle it ourselves */
+.timer-item:focus {
+  outline: none;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   Keyboard Help "?" Button
+─────────────────────────────────────────────────────────────────── */
+
+.kbd-help-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--card-shadow);
+}
+.kbd-help-btn:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+  transform: scale(1.1);
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   Keyboard Shortcuts Overlay
+─────────────────────────────────────────────────────────────────── */
+
+.kbd-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: kbd-fade-in 0.18s ease;
+}
+html.dark .kbd-overlay-backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+@keyframes kbd-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.kbd-overlay-panel {
+  background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2), var(--card-shadow);
+  border-radius: var(--border-radius);
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 460px;
+  animation: kbd-slide-up 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+html.dark .kbd-overlay-panel {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), var(--card-shadow);
+}
+
+@keyframes kbd-slide-up {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.kbd-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.kbd-overlay-header h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--text-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.kbd-shortcut-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.kbd-shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.kbd-keys {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  min-width: 100px;
+  justify-content: flex-end;
+}
+
+.kbd-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  letter-spacing: 0;
+}
+html.dark .kbd-key {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.kbd-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Inline kbd for empty state hint */
+.kbd-key-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.18);
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+  vertical-align: middle;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+html.dark .kbd-key-inline {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
