@@ -4,6 +4,7 @@ import { TimerCore } from '../core/TimerCore.js';
 import { AlarmCoordinator } from '../core/AlarmCoordinator.js';
 import { StorageProvider } from '../core/StorageProvider.js';
 import { ThemeManager } from '../core/ThemeManager.js';
+import { FontManager, TIMER_FONTS } from '../core/FontManager.js';
 import { AddTimer } from './AddTimer.js';
 import { TimerItem } from './TimerItem.js';
 import { KeyboardHelp } from './KeyboardHelp.js';
@@ -20,6 +21,7 @@ import { Moon, Sun, Monitor, BellRing, BellOff } from '../icons.js';
 export function TimerApp() {
   const [timers, setTimers] = useState([]);
   const [theme, setTheme] = useState(ThemeManager.getTheme());
+  const [timerFont, setTimerFont] = useState(FontManager.getFont());
   const tickIntervalRef = useRef(null);
   const [draggedTimerId, setDraggedTimerId] = useState(null);
   const [isMuted, setIsMuted] = useState(() => StorageProvider.getSettings().isMuted || false);
@@ -183,6 +185,11 @@ export function TimerApp() {
   const toggleTheme = (newTheme) => {
     ThemeManager.setTheme(newTheme);
     setTheme(newTheme);
+  };
+
+  const changeFont = (fontId) => {
+    FontManager.setFont(fontId);
+    setTimerFont(fontId);
   };
 
   const toggleMute = useCallback(() => {
@@ -413,6 +420,18 @@ export function TimerApp() {
             >
               ${isMuted ? html`<${BellOff} size=${16} />` : html`<${BellRing} size=${16} />`}
             </button>
+          </div>
+
+          <div className="theme-toggle">
+            ${TIMER_FONTS.map(f => html`
+              <button
+                key=${f.id}
+                className=${`theme-btn font-btn ${timerFont === f.id ? 'active' : ''}`}
+                onClick=${() => changeFont(f.id)}
+                title=${f.label}
+                style=${{ fontFamily: f.family }}
+              >0</button>
+            `)}
           </div>
 
           <div className="theme-toggle">
