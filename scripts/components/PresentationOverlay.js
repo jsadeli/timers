@@ -31,11 +31,20 @@ export function PresentationOverlay({ timerCore, onUpdate, onDismiss, onClose })
       if (e.key === 'Escape') {
         e.stopImmediatePropagation();
         onClose();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (timerCore.state === 'RUNNING') {
+          timerCore.pause();
+        } else if (timerCore.state === 'PAUSED' || timerCore.state === 'IDLE') {
+          timerCore.start();
+        }
+        onUpdate();
       }
     };
     window.addEventListener('keydown', handler, true); // capture phase, runs before TimerApp handler
     return () => window.removeEventListener('keydown', handler, true);
-  }, [onClose]);
+  }, [onClose, onUpdate, timerCore]);
 
   const remainingMs = timerCore.getRemainingTimeMs();
   const progressPercent = Math.min(100, Math.max(0, 100 - (remainingMs / timerCore.totalDurationMs) * 100));
