@@ -664,6 +664,55 @@ html.dark .timer-item.kbd-focused {
   border-color: var(--accent-color);
   transform: scale(1.1);
 }
+.kbd-help-btn.system-menu-btn.active {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   System Settings Dropdown
+─────────────────────────────────────────────────────────────────── */
+
+.system-menu-wrapper {
+  position: relative;
+}
+
+.system-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 0.85rem;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 200;
+  min-width: 140px;
+}
+
+.system-dropdown-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.system-dropdown-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 0.25rem;
+}
+
+.system-dropdown .theme-toggle {
+  box-shadow: none;
+}
 
 /* ───────────────────────────────────────────────────────────────────
    Keyboard Shortcuts Overlay

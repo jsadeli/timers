@@ -9,7 +9,7 @@ import { AddTimer } from './AddTimer.js';
 import { TimerItem } from './TimerItem.js';
 import { KeyboardHelp } from './KeyboardHelp.js';
 import { PresentationOverlay } from './PresentationOverlay.js';
-import { Moon, Sun, Monitor, BellRing, BellOff } from '../icons.js';
+import { Moon, Sun, Monitor, BellRing, BellOff, Settings } from '../icons.js';
 
 /**
  * Root application component.
@@ -26,6 +26,8 @@ export function TimerApp() {
   const [draggedTimerId, setDraggedTimerId] = useState(null);
   const [isMuted, setIsMuted] = useState(() => StorageProvider.getSettings().isMuted || false);
   const [presentingTimerId, setPresentingTimerId] = useState(null);
+  const [isSystemMenuOpen, setIsSystemMenuOpen] = useState(false);
+  const systemMenuRef = useRef(null);
 
   /** Ref to the AddTimer component's imperative API */
   const addTimerRef = useRef(null);
@@ -37,6 +39,19 @@ export function TimerApp() {
    */
   const focusedIndexRef = useRef(-1);
   const [focusedTimerId, setFocusedTimerId] = useState(null);
+
+  // ─── System Menu Click-Outside ──────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!isSystemMenuOpen) return;
+    const handler = (e) => {
+      if (systemMenuRef.current && !systemMenuRef.current.contains(e.target)) {
+        setIsSystemMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [isSystemMenuOpen]);
 
   // ─── Initial Load ─────────────────────────────────────────────────────────
 
@@ -412,46 +427,61 @@ export function TimerApp() {
         <h1>Timers</h1>
 
         <div style=${{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <div className="theme-toggle">
-            <button
-              className="theme-btn"
-              onClick=${toggleMute}
-              title=${isMuted ? 'Unmute Alarms (M)' : 'Mute Alarms (M)'}
-            >
-              ${isMuted ? html`<${BellOff} size=${16} />` : html`<${BellRing} size=${16} />`}
-            </button>
-          </div>
+          <button
+            className="kbd-help-btn"
+            onClick=${toggleMute}
+            title=${isMuted ? 'Unmute Alarms (M)' : 'Mute Alarms (M)'}
+            aria-label=${isMuted ? 'Unmute Alarms' : 'Mute Alarms'}
+          >
+            ${isMuted ? html`<${BellOff} size=${15} />` : html`<${BellRing} size=${15} />`}
+          </button>
 
-          <div className="theme-toggle">
-            ${TIMER_FONTS.map(f => html`
-              <button
-                key=${f.id}
-                className=${`theme-btn font-btn ${timerFont === f.id ? 'active' : ''}`}
-                onClick=${() => changeFont(f.id)}
-                title=${f.label}
-                style=${{ fontFamily: f.family }}
-              >0</button>
-            `)}
-          </div>
-
-          <div className="theme-toggle">
+          <div className="system-menu-wrapper" ref=${systemMenuRef}>
             <button
-              className=${`theme-btn ${theme === 'light' ? 'active' : ''}`}
-              onClick=${() => toggleTheme('light')}
-              title="Light Mode"
-            ><${Sun} size=${16}/></button>
+              className=${`kbd-help-btn system-menu-btn ${isSystemMenuOpen ? 'active' : ''}`}
+              onClick=${() => setIsSystemMenuOpen(v => !v)}
+              title="Display settings"
+              aria-label="Display settings"
+            ><${Settings} size=${15} /></button>
 
-            <button
-              className=${`theme-btn ${theme === 'auto' ? 'active' : ''}`}
-              onClick=${() => toggleTheme('auto')}
-              title="System Auto"
-            ><${Monitor} size=${16}/></button>
-
-            <button
-              className=${`theme-btn ${theme === 'dark' ? 'active' : ''}`}
-              onClick=${() => toggleTheme('dark')}
-              title="Dark Mode"
-            ><${Moon} size=${16}/></button>
+            ${isSystemMenuOpen && html`
+              <div className="system-dropdown" onClick=${e => e.stopPropagation()}>
+                <div className="system-dropdown-section">
+                  <span className="system-dropdown-label">Font</span>
+                  <div className="theme-toggle">
+                    ${TIMER_FONTS.map(f => html`
+                      <button
+                        key=${f.id}
+                        className=${`theme-btn font-btn ${timerFont === f.id ? 'active' : ''}`}
+                        onClick=${() => changeFont(f.id)}
+                        title=${f.label}
+                        style=${{ fontFamily: f.family }}
+                      >0</button>
+                    `)}
+                  </div>
+                </div>
+                <div className="system-dropdown-section">
+                  <span className="system-dropdown-label">Theme</span>
+                  <div className="theme-toggle">
+                    <button
+                      className=${`theme-btn ${theme === 'light' ? 'active' : ''}`}
+                      onClick=${() => toggleTheme('light')}
+                      title="Light Mode"
+                    ><${Sun} size=${16}/></button>
+                    <button
+                      className=${`theme-btn ${theme === 'auto' ? 'active' : ''}`}
+                      onClick=${() => toggleTheme('auto')}
+                      title="System Auto"
+                    ><${Monitor} size=${16}/></button>
+                    <button
+                      className=${`theme-btn ${theme === 'dark' ? 'active' : ''}`}
+                      onClick=${() => toggleTheme('dark')}
+                      title="Dark Mode"
+                    ><${Moon} size=${16}/></button>
+                  </div>
+                </div>
+              </div>
+            `}
           </div>
 
           <${KeyboardHelp} />
