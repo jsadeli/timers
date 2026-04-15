@@ -25,8 +25,8 @@ html[data-timer-font="outfit"] {
   --font-timer: 'Outfit', sans-serif;
 }
 
-html[data-timer-font="orbitron"] {
-  --font-timer: 'Orbitron', sans-serif;
+html[data-timer-font="caveat"] {
+  --font-timer: 'Caveat', cursive;
 }
 
 html.dark {
