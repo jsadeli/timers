@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { html, formatTime } from '../utils.js';
-import { Play, Pause, Trash2, RotateCcw, X, GripVertical, Square } from '../icons.js';
+import { Play, Pause, Trash2, RotateCcw, X, GripVertical, Square, Maximize2 } from '../icons.js';
 import { AlarmCoordinator } from '../core/AlarmCoordinator.js';
 
-export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged, isFocused, onFocus, onDragStart, onDragEnter, onDragEnd }) {
+export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, onPresent, isDragged, isFocused, onFocus, onDragStart, onDragEnter, onDragEnd }) {
   const [now, setNow] = useState(Date.now());
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(timerCore.label);
@@ -13,7 +13,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
 
   useEffect(() => {
     let animationFrameId;
-    
+
     // Smooth update of time
     const tick = () => {
       setNow(Date.now());
@@ -73,7 +73,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
             const elapsed = timerCore.totalDurationMs - timerCore.getRemainingTimeMs();
             timerCore.targetEndTime = Date.now() + Math.max(0, ms - elapsed);
          } else if (timerCore.state === 'PAUSED') {
-            // Keep the same ratio or just update remaining time proportionally? or simple: 
+            // Keep the same ratio or just update remaining time proportionally? or simple:
             timerCore.remainingTimeOnPause = ms;
          }
       }
@@ -83,7 +83,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
   };
 
   return html`
-    <div 
+    <div
       className=${`glass-card timer-item state-${timerCore.state} ${isDragged ? 'dragging' : ''} ${isFocused ? 'kbd-focused' : ''}`}
       draggable="true"
       onClick=${onFocus}
@@ -100,7 +100,7 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
       onDragOver=${(e) => e.preventDefault()}
       onDragEnd=${onDragEnd}
     >
-      
+
       <div className="timer-header">
         <div className="drag-handle" title="Drag to reorder">
           <${GripVertical} size=${20} />
@@ -119,11 +119,14 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
             ${timerCore.label}
           </h3>
         `}
+        <button className="btn-icon" onClick=${(e) => { e.stopPropagation(); onPresent(timerCore.id); }} aria-label="Presentation Mode" title="Presentation Mode">
+          <${Maximize2} size=${16} />
+        </button>
         <button className="btn-icon danger" onClick=${onDelete} aria-label="Delete Timer" title="Delete">
           <${Trash2} size=${18} />
         </button>
       </div>
-      
+
       <div className="timer-display" onClick=${() => !isEditingDuration && startDurationEdit()} title="Click to edit duration" style=${{cursor: 'text'}}>
         ${isEditingDuration ? html`
           <input
@@ -137,48 +140,48 @@ export function TimerItem({ timerCore, onUpdate, onDelete, onDismiss, isDragged,
           />
         ` : formatTime(remainingMs)}
       </div>
-      
+
       <div className="timer-progress-container">
-        <div 
-          className="timer-progress-bar" 
+        <div
+          className="timer-progress-bar"
           style=${{ width: `${progressPercent}%` }}
         ></div>
       </div>
-      
+
       <div className="timer-controls">
         ${(timerCore.state === 'RUNNING' || timerCore.state === 'PAUSED') ? html`
-          <button 
-            className="btn-icon-large" 
+          <button
+            className="btn-icon-large"
             onClick=${handlePauseResume}
             title=${timerCore.state === 'RUNNING' ? 'Pause' : 'Resume'}
           >
             ${timerCore.state === 'RUNNING' ? html`<${Pause} size=${24} />` : html`<${Play} size=${24} />`}
           </button>
-          <button 
-            className="btn-icon-large" 
+          <button
+            className="btn-icon-large"
             onClick=${() => { AlarmCoordinator.stopAlarm(timerCore.id); timerCore.reset(); onUpdate(); }}
             title="Cancel"
           >
             <${Square} size=${22} />
           </button>
         ` : timerCore.state === 'FINISHED' ? html`
-          <button 
-            className="btn-icon-large" 
+          <button
+            className="btn-icon-large"
             onClick=${handleRestart}
             title="Restart"
           >
             <${RotateCcw} size=${24} />
           </button>
-          <button 
-            className="btn-icon-large" 
+          <button
+            className="btn-icon-large"
             onClick=${() => onDismiss(timerCore.id)}
             title="Dismiss"
           >
             <${X} size=${24} />
           </button>
         ` : html`
-          <button 
-            className="btn-icon-large" 
+          <button
+            className="btn-icon-large"
             onClick=${handlePauseResume}
             title="Start"
           >

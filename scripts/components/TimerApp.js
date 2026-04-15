@@ -7,6 +7,7 @@ import { ThemeManager } from '../core/ThemeManager.js';
 import { AddTimer } from './AddTimer.js';
 import { TimerItem } from './TimerItem.js';
 import { KeyboardHelp } from './KeyboardHelp.js';
+import { PresentationOverlay } from './PresentationOverlay.js';
 import { Moon, Sun, Monitor, BellRing, BellOff } from '../icons.js';
 
 /**
@@ -22,6 +23,7 @@ export function TimerApp() {
   const tickIntervalRef = useRef(null);
   const [draggedTimerId, setDraggedTimerId] = useState(null);
   const [isMuted, setIsMuted] = useState(() => StorageProvider.getSettings().isMuted || false);
+  const [presentingTimerId, setPresentingTimerId] = useState(null);
 
   /** Ref to the AddTimer component's imperative API */
   const addTimerRef = useRef(null);
@@ -172,6 +174,10 @@ export function TimerApp() {
     });
   }, []);
 
+  const handlePresentTimer = useCallback((id) => {
+    setPresentingTimerId(id);
+  }, []);
+
   // ─── Theme & Mute ─────────────────────────────────────────────────────────
 
   const toggleTheme = (newTheme) => {
@@ -265,6 +271,20 @@ export function TimerApp() {
             else if (t.state === 'PAUSED' || (t.state === 'IDLE' && t.totalDurationMs > 0)) t.start();
             StorageProvider.saveTimers(prev.map(t => t.toJSON()));
             return [...prev];
+          });
+          break;
+        }
+
+        // F — present the focused timer
+        case 'f':
+        case 'F': {
+          e.preventDefault();
+          setTimers(prev => {
+            const idx = focusedIndexRef.current;
+            if (idx >= 0 && idx < prev.length) {
+              setPresentingTimerId(prev[idx].id);
+            }
+            return prev;
           });
           break;
         }
@@ -430,6 +450,7 @@ export function TimerApp() {
               onUpdate=${handleUpdateTimer}
               onDelete=${() => handleDeleteTimer(timer.id)}
               onDismiss=${handleDismissTimer}
+              onPresent=${handlePresentTimer}
               isDragged=${draggedTimerId === timer.id}
               isFocused=${focusedTimerId === timer.id}
               onFocus=${() => {
@@ -450,5 +471,17 @@ export function TimerApp() {
         </div>
       `}
     </div>
+
+    ${presentingTimerId ? (() => {
+      const presentingTimer = timers.find(t => t.id === presentingTimerId);
+      return presentingTimer ? html`
+        <${PresentationOverlay}
+          timerCore=${presentingTimer}
+          onUpdate=${handleUpdateTimer}
+          onDismiss=${(id) => { handleDismissTimer(id); setPresentingTimerId(null); }}
+          onClose=${() => setPresentingTimerId(null)}
+        />
+      ` : null;
+    })() : null}
   `;
 }

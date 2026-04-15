@@ -31,6 +31,7 @@ export function KeyboardHelp() {
     { keys: ['M'], desc: 'Toggle mute' },
     { keys: ['←', '↑', '↓', '→'], desc: 'Navigate between timers' },
     { keys: ['P'], desc: 'Play / pause focused timer' },
+    { keys: ['F'], desc: 'Presentation mode for focused timer' },
     { keys: ['Del'], desc: 'Delete focused timer' },
     { keys: ['?'], desc: 'Show this help' },
   ];
