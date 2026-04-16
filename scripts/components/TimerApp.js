@@ -1,15 +1,15 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { html } from '../utils.js';
-import { TimerCore } from '../core/TimerCore.js';
-import { AlarmCoordinator } from '../core/AlarmCoordinator.js';
-import { StorageProvider } from '../core/StorageProvider.js';
-import { ThemeManager } from '../core/ThemeManager.js';
-import { FontManager, TIMER_FONTS } from '../core/FontManager.js';
-import { AddTimer } from './AddTimer.js';
-import { TimerItem } from './TimerItem.js';
-import { KeyboardHelp } from './KeyboardHelp.js';
-import { PresentationOverlay } from './PresentationOverlay.js';
-import { Moon, Sun, Monitor, BellRing, BellOff, Settings, Zap, Bird, Bell } from '../icons.js';
+import { useState, useEffect, useRef, useCallback } from "react";
+import { html } from "../utils.js";
+import { TimerCore } from "../core/TimerCore.js";
+import { AlarmCoordinator } from "../core/AlarmCoordinator.js";
+import { StorageProvider } from "../core/StorageProvider.js";
+import { ThemeManager } from "../core/ThemeManager.js";
+import { FontManager, TIMER_FONTS } from "../core/FontManager.js";
+import { AddTimer } from "./AddTimer.js";
+import { TimerItem } from "./TimerItem.js";
+import { KeyboardHelp } from "./KeyboardHelp.js";
+import { PresentationOverlay } from "./PresentationOverlay.js";
+import { Moon, Sun, Monitor, BellRing, BellOff, Settings, Zap, Bird, Bell } from "../icons.js";
 
 /**
  * Root application component.
@@ -22,7 +22,9 @@ export function TimerApp() {
   const [timers, setTimers] = useState([]);
   const [theme, setTheme] = useState(ThemeManager.getTheme());
   const [timerFont, setTimerFont] = useState(FontManager.getFont());
-  const [alarmSound, setAlarmSound] = useState(() => StorageProvider.getSettings().alarmSound || 'default');
+  const [alarmSound, setAlarmSound] = useState(
+    () => StorageProvider.getSettings().alarmSound || "default",
+  );
   const tickIntervalRef = useRef(null);
   const [draggedTimerId, setDraggedTimerId] = useState(null);
   const [isMuted, setIsMuted] = useState(() => StorageProvider.getSettings().isMuted || false);
@@ -50,8 +52,8 @@ export function TimerApp() {
         setIsSystemMenuOpen(false);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [isSystemMenuOpen]);
 
   // ─── Initial Load ─────────────────────────────────────────────────────────
@@ -60,7 +62,7 @@ export function TimerApp() {
     AlarmCoordinator.setIsMuted(isMuted);
     AlarmCoordinator.setAlarmSound(alarmSound);
     const saved = StorageProvider.getTimers();
-    const loadedTimers = saved.map(t => TimerCore.fromJSON(t));
+    const loadedTimers = saved.map((t) => TimerCore.fromJSON(t));
     setTimers(loadedTimers);
 
     startTickLoop();
@@ -68,19 +70,19 @@ export function TimerApp() {
     // Unlock audio context on first user interaction
     const unlockAudio = () => {
       AlarmCoordinator.initAudio();
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
     };
-    window.addEventListener('click', unlockAudio);
-    window.addEventListener('touchstart', unlockAudio);
-    window.addEventListener('keydown', unlockAudio);
+    window.addEventListener("click", unlockAudio);
+    window.addEventListener("touchstart", unlockAudio);
+    window.addEventListener("keydown", unlockAudio);
 
     return () => {
       stopTickLoop();
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
     };
   }, []);
 
@@ -88,16 +90,16 @@ export function TimerApp() {
 
   const saveTimers = (currentTimers) => {
     setTimers(currentTimers);
-    StorageProvider.saveTimers(currentTimers.map(t => t.toJSON()));
+    StorageProvider.saveTimers(currentTimers.map((t) => t.toJSON()));
   };
 
   const startTickLoop = () => {
     if (tickIntervalRef.current) return;
     tickIntervalRef.current = setInterval(() => {
-      setTimers(prevTimers => {
+      setTimers((prevTimers) => {
         let hasChanges = false;
-        const nextTimers = prevTimers.map(t => {
-          if (t.state === 'RUNNING') {
+        const nextTimers = prevTimers.map((t) => {
+          if (t.state === "RUNNING") {
             const justFinished = t.tick();
             if (justFinished) {
               hasChanges = true;
@@ -108,7 +110,7 @@ export function TimerApp() {
         });
 
         if (hasChanges) {
-          StorageProvider.saveTimers(nextTimers.map(t => t.toJSON()));
+          StorageProvider.saveTimers(nextTimers.map((t) => t.toJSON()));
           return [...nextTimers];
         }
         return prevTimers;
@@ -129,9 +131,9 @@ export function TimerApp() {
 
   const handleDragEnter = (targetId) => {
     if (!draggedTimerId || draggedTimerId === targetId) return;
-    setTimers(prevTimers => {
-      const draggedIndex = prevTimers.findIndex(t => t.id === draggedTimerId);
-      const targetIndex = prevTimers.findIndex(t => t.id === targetId);
+    setTimers((prevTimers) => {
+      const draggedIndex = prevTimers.findIndex((t) => t.id === draggedTimerId);
+      const targetIndex = prevTimers.findIndex((t) => t.id === targetId);
       if (draggedIndex < 0 || targetIndex < 0) return prevTimers;
       const newTimers = [...prevTimers];
       const [draggedItem] = newTimers.splice(draggedIndex, 1);
@@ -142,8 +144,8 @@ export function TimerApp() {
 
   const handleDragEnd = () => {
     setDraggedTimerId(null);
-    setTimers(prevTimers => {
-      StorageProvider.saveTimers(prevTimers.map(t => t.toJSON()));
+    setTimers((prevTimers) => {
+      StorageProvider.saveTimers(prevTimers.map((t) => t.toJSON()));
       return prevTimers;
     });
   };
@@ -151,44 +153,44 @@ export function TimerApp() {
   // ─── Timer CRUD ───────────────────────────────────────────────────────────
 
   const handleAddTimer = (newTimer) => {
-    setTimers(prev => {
+    setTimers((prev) => {
       const next = [newTimer, ...prev];
-      StorageProvider.saveTimers(next.map(t => t.toJSON()));
+      StorageProvider.saveTimers(next.map((t) => t.toJSON()));
       return next;
     });
   };
 
   const handleDeleteTimer = useCallback((id) => {
     AlarmCoordinator.stopAlarm(id);
-    setTimers(prev => {
-      const next = prev.filter(t => t.id !== id);
+    setTimers((prev) => {
+      const next = prev.filter((t) => t.id !== id);
       // Adjust focused index
-      const oldIdx = prev.findIndex(t => t.id === id);
+      const oldIdx = prev.findIndex((t) => t.id === id);
       if (oldIdx !== -1) {
         const newIdx = Math.min(oldIdx, next.length - 1);
         focusedIndexRef.current = newIdx;
         setFocusedTimerId(next[newIdx]?.id ?? null);
       }
-      StorageProvider.saveTimers(next.map(t => t.toJSON()));
+      StorageProvider.saveTimers(next.map((t) => t.toJSON()));
       return next;
     });
   }, []);
 
   const handleUpdateTimer = useCallback(() => {
-    setTimers(prev => {
-      StorageProvider.saveTimers(prev.map(t => t.toJSON()));
+    setTimers((prev) => {
+      StorageProvider.saveTimers(prev.map((t) => t.toJSON()));
       return [...prev];
     });
   }, []);
 
   const handleDismissTimer = useCallback((id) => {
     AlarmCoordinator.stopAlarm(id);
-    setTimers(prevTimers => {
-      const nextTimers = prevTimers.map(t => {
+    setTimers((prevTimers) => {
+      const nextTimers = prevTimers.map((t) => {
         if (t.id === id) t.reset();
         return t;
       });
-      StorageProvider.saveTimers(nextTimers.map(t => t.toJSON()));
+      StorageProvider.saveTimers(nextTimers.map((t) => t.toJSON()));
       return [...nextTimers];
     });
   }, []);
@@ -214,14 +216,14 @@ export function TimerApp() {
     AlarmCoordinator.setAlarmSound(sound);
     const settings = StorageProvider.getSettings();
     StorageProvider.saveSettings({ ...settings, alarmSound: sound });
-    
+
     // Play preview
     AlarmCoordinator.initAudio();
     AlarmCoordinator.playChime();
   };
 
   const toggleMute = useCallback(() => {
-    setIsMuted(prev => {
+    setIsMuted((prev) => {
       const newMuted = !prev;
       AlarmCoordinator.setIsMuted(newMuted);
       const settings = StorageProvider.getSettings();
@@ -235,7 +237,7 @@ export function TimerApp() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       const tag = e.target.tagName;
-      const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable;
+      const inInput = tag === "INPUT" || tag === "TEXTAREA" || e.target.isContentEditable;
 
       const addPanel = addTimerRef.current;
       const panelOpen = addPanel?.isExpanded?.() ?? false;
@@ -248,22 +250,22 @@ export function TimerApp() {
           addPanel.appendDigit(e.key);
           return;
         }
-        if (e.key === 'Backspace' && !inInput) {
+        if (e.key === "Backspace" && !inInput) {
           e.preventDefault();
           addPanel.backspace();
           return;
         }
-        if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey && !inInput) {
+        if ((e.key === "c" || e.key === "C") && !e.ctrlKey && !e.metaKey && !inInput) {
           e.preventDefault();
           addPanel.clear();
           return;
         }
-        if (e.key === 'Enter' && !inInput) {
+        if (e.key === "Enter" && !inInput) {
           e.preventDefault();
           addPanel.submit();
           return;
         }
-        if (e.key === 'Escape') {
+        if (e.key === "Escape") {
           e.preventDefault();
           addPanel.close();
           return;
@@ -280,41 +282,42 @@ export function TimerApp() {
 
       switch (key) {
         // Open new timer panel
-        case 'n':
-        case 'N': {
+        case "n":
+        case "N": {
           e.preventDefault();
           addPanel?.open?.();
           break;
         }
 
         // Toggle mute
-        case 'm':
-        case 'M': {
+        case "m":
+        case "M": {
           e.preventDefault();
           toggleMute();
           break;
         }
 
         // Play / pause the FOCUSED timer (space)
-        case ' ': {
+        case " ": {
           e.preventDefault();
-          setTimers(prev => {
+          setTimers((prev) => {
             const idx = focusedIndexRef.current;
             if (idx < 0 || idx >= prev.length) return prev;
             const t = prev[idx];
-            if (t.state === 'RUNNING') t.pause();
-            else if (t.state === 'PAUSED' || (t.state === 'IDLE' && t.totalDurationMs > 0)) t.start();
-            StorageProvider.saveTimers(prev.map(t => t.toJSON()));
+            if (t.state === "RUNNING") t.pause();
+            else if (t.state === "PAUSED" || (t.state === "IDLE" && t.totalDurationMs > 0))
+              t.start();
+            StorageProvider.saveTimers(prev.map((t) => t.toJSON()));
             return [...prev];
           });
           break;
         }
 
         // F — present the focused timer
-        case 'f':
-        case 'F': {
+        case "f":
+        case "F": {
           e.preventDefault();
-          setTimers(prev => {
+          setTimers((prev) => {
             const idx = focusedIndexRef.current;
             if (idx >= 0 && idx < prev.length) {
               setPresentingTimerId(prev[idx].id);
@@ -324,55 +327,56 @@ export function TimerApp() {
           break;
         }
 
-
-
         // Stop / cancel ALL running timers
-        case 's':
-        case 'S': {
+        case "s":
+        case "S": {
           e.preventDefault();
-          setTimers(prev => {
-            prev.forEach(t => {
-              if (t.state === 'RUNNING' || t.state === 'PAUSED') {
+          setTimers((prev) => {
+            prev.forEach((t) => {
+              if (t.state === "RUNNING" || t.state === "PAUSED") {
                 AlarmCoordinator.stopAlarm(t.id);
                 t.reset();
               }
             });
-            StorageProvider.saveTimers(prev.map(t => t.toJSON()));
+            StorageProvider.saveTimers(prev.map((t) => t.toJSON()));
             return [...prev];
           });
           break;
         }
 
         // Escape — dismiss all finished timers
-        case 'Escape': {
-          setTimers(prev => {
-            const hasFinished = prev.some(t => t.state === 'FINISHED');
+        case "Escape": {
+          setTimers((prev) => {
+            const hasFinished = prev.some((t) => t.state === "FINISHED");
             if (!hasFinished) return prev;
-            prev.forEach(t => {
-              if (t.state === 'FINISHED') {
+            prev.forEach((t) => {
+              if (t.state === "FINISHED") {
                 AlarmCoordinator.stopAlarm(t.id);
                 t.reset();
               }
             });
-            StorageProvider.saveTimers(prev.map(t => t.toJSON()));
+            StorageProvider.saveTimers(prev.map((t) => t.toJSON()));
             return [...prev];
           });
           break;
         }
 
         // Arrow keys — navigate focused timer
-        case 'ArrowUp':
-        case 'ArrowLeft':
-        case 'ArrowDown':
-        case 'ArrowRight': {
+        case "ArrowUp":
+        case "ArrowLeft":
+        case "ArrowDown":
+        case "ArrowRight": {
           e.preventDefault();
-          setTimers(prev => {
+          setTimers((prev) => {
             if (prev.length === 0) return prev;
-            const delta = (key === 'ArrowDown' || key === 'ArrowRight') ? 1 : -1;
+            const delta = key === "ArrowDown" || key === "ArrowRight" ? 1 : -1;
             const current = focusedIndexRef.current;
-            const next = current < 0
-              ? (delta > 0 ? 0 : prev.length - 1)
-              : Math.max(0, Math.min(prev.length - 1, current + delta));
+            const next =
+              current < 0
+                ? delta > 0
+                  ? 0
+                  : prev.length - 1
+                : Math.max(0, Math.min(prev.length - 1, current + delta));
             focusedIndexRef.current = next;
             setFocusedTimerId(prev[next]?.id ?? null);
             return prev;
@@ -381,34 +385,35 @@ export function TimerApp() {
         }
 
         // P — play/pause the focused timer
-        case 'p':
-        case 'P': {
+        case "p":
+        case "P": {
           e.preventDefault();
-          setTimers(prev => {
+          setTimers((prev) => {
             const idx = focusedIndexRef.current;
             if (idx < 0 || idx >= prev.length) return prev;
             const t = prev[idx];
-            if (t.state === 'RUNNING') t.pause();
-            else if (t.state === 'PAUSED' || (t.state === 'IDLE' && t.totalDurationMs > 0)) t.start();
-            StorageProvider.saveTimers(prev.map(t => t.toJSON()));
+            if (t.state === "RUNNING") t.pause();
+            else if (t.state === "PAUSED" || (t.state === "IDLE" && t.totalDurationMs > 0))
+              t.start();
+            StorageProvider.saveTimers(prev.map((t) => t.toJSON()));
             return [...prev];
           });
           break;
         }
 
         // Delete — delete the focused timer
-        case 'Delete': {
+        case "Delete": {
           e.preventDefault();
-          setTimers(prev => {
+          setTimers((prev) => {
             const idx = focusedIndexRef.current;
             if (idx < 0 || idx >= prev.length) return prev;
             const id = prev[idx].id;
             AlarmCoordinator.stopAlarm(id);
-            const next = prev.filter(t => t.id !== id);
+            const next = prev.filter((t) => t.id !== id);
             const newIdx = Math.min(idx, next.length - 1);
             focusedIndexRef.current = next.length > 0 ? newIdx : -1;
             setFocusedTimerId(next[newIdx]?.id ?? null);
-            StorageProvider.saveTimers(next.map(t => t.toJSON()));
+            StorageProvider.saveTimers(next.map((t) => t.toJSON()));
             return next;
           });
           break;
@@ -419,14 +424,14 @@ export function TimerApp() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
     // toggleMute is stable (useCallback), handleDeleteTimer etc. not used here
   }, [toggleMute]);
 
   // Clear focus when clicking outside a timer card
   const handleAppClick = (e) => {
-    if (!e.target.closest('.timer-item')) {
+    if (!e.target.closest(".timer-item")) {
       focusedIndexRef.current = -1;
       setFocusedTimerId(null);
     }
@@ -439,78 +444,97 @@ export function TimerApp() {
       <header>
         <h1>Timers</h1>
 
-        <div style=${{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div style=${{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
           <button
             className="kbd-help-btn"
             onClick=${toggleMute}
-            title=${isMuted ? 'Unmute Alarms (M)' : 'Mute Alarms (M)'}
-            aria-label=${isMuted ? 'Unmute Alarms' : 'Mute Alarms'}
+            title=${isMuted ? "Unmute Alarms (M)" : "Mute Alarms (M)"}
+            aria-label=${isMuted ? "Unmute Alarms" : "Mute Alarms"}
           >
             ${isMuted ? html`<${BellOff} size=${15} />` : html`<${BellRing} size=${15} />`}
           </button>
 
           <div className="system-menu-wrapper" ref=${systemMenuRef}>
             <button
-              className=${`kbd-help-btn system-menu-btn ${isSystemMenuOpen ? 'active' : ''}`}
-              onClick=${() => setIsSystemMenuOpen(v => !v)}
+              className=${`kbd-help-btn system-menu-btn ${isSystemMenuOpen ? "active" : ""}`}
+              onClick=${() => setIsSystemMenuOpen((v) => !v)}
               title="Display settings"
               aria-label="Display settings"
-            ><${Settings} size=${15} /></button>
+            >
+              <${Settings} size=${15} />
+            </button>
 
-            ${isSystemMenuOpen && html`
-              <div className="system-dropdown" onClick=${e => e.stopPropagation()}>
+            ${isSystemMenuOpen &&
+            html`
+              <div className="system-dropdown" onClick=${(e) => e.stopPropagation()}>
                 <div className="system-dropdown-section">
                   <span className="system-dropdown-label">Font</span>
                   <div className="theme-toggle">
-                    ${TIMER_FONTS.map(f => html`
-                      <button
-                        key=${f.id}
-                        className=${`theme-btn font-btn ${timerFont === f.id ? 'active' : ''}`}
-                        onClick=${() => changeFont(f.id)}
-                        title=${f.label}
-                        style=${{ fontFamily: f.family }}
-                      >0</button>
-                    `)}
+                    ${TIMER_FONTS.map(
+                      (f) => html`
+                        <button
+                          key=${f.id}
+                          className=${`theme-btn font-btn ${timerFont === f.id ? "active" : ""}`}
+                          onClick=${() => changeFont(f.id)}
+                          title=${f.label}
+                          style=${{ fontFamily: f.family }}
+                        >
+                          0
+                        </button>
+                      `,
+                    )}
                   </div>
                 </div>
                 <div className="system-dropdown-section">
                   <span className="system-dropdown-label">Alarm Sound</span>
                   <div className="theme-toggle">
                     <button
-                      className=${`theme-btn ${alarmSound === 'default' ? 'active' : ''}`}
-                      onClick=${() => changeAlarmSound('default')}
+                      className=${`theme-btn ${alarmSound === "default" ? "active" : ""}`}
+                      onClick=${() => changeAlarmSound("default")}
                       title="Default"
-                    ><${Bell} size=${16}/></button>
+                    >
+                      <${Bell} size=${16} />
+                    </button>
                     <button
-                      className=${`theme-btn ${alarmSound === 'high-pitch' ? 'active' : ''}`}
-                      onClick=${() => changeAlarmSound('high-pitch')}
+                      className=${`theme-btn ${alarmSound === "high-pitch" ? "active" : ""}`}
+                      onClick=${() => changeAlarmSound("high-pitch")}
                       title="High Pitch"
-                    ><${Zap} size=${16}/></button>
+                    >
+                      <${Zap} size=${16} />
+                    </button>
                     <button
-                      className=${`theme-btn ${alarmSound === 'rooster' ? 'active' : ''}`}
-                      onClick=${() => changeAlarmSound('rooster')}
+                      className=${`theme-btn ${alarmSound === "rooster" ? "active" : ""}`}
+                      onClick=${() => changeAlarmSound("rooster")}
                       title="Rooster"
-                    ><${Bird} size=${16}/></button>
+                    >
+                      <${Bird} size=${16} />
+                    </button>
                   </div>
                 </div>
                 <div className="system-dropdown-section">
                   <span className="system-dropdown-label">Theme</span>
                   <div className="theme-toggle">
                     <button
-                      className=${`theme-btn ${theme === 'light' ? 'active' : ''}`}
-                      onClick=${() => toggleTheme('light')}
+                      className=${`theme-btn ${theme === "light" ? "active" : ""}`}
+                      onClick=${() => toggleTheme("light")}
                       title="Light Mode"
-                    ><${Sun} size=${16}/></button>
+                    >
+                      <${Sun} size=${16} />
+                    </button>
                     <button
-                      className=${`theme-btn ${theme === 'auto' ? 'active' : ''}`}
-                      onClick=${() => toggleTheme('auto')}
+                      className=${`theme-btn ${theme === "auto" ? "active" : ""}`}
+                      onClick=${() => toggleTheme("auto")}
                       title="System Auto"
-                    ><${Monitor} size=${16}/></button>
+                    >
+                      <${Monitor} size=${16} />
+                    </button>
                     <button
-                      className=${`theme-btn ${theme === 'dark' ? 'active' : ''}`}
-                      onClick=${() => toggleTheme('dark')}
+                      className=${`theme-btn ${theme === "dark" ? "active" : ""}`}
+                      onClick=${() => toggleTheme("dark")}
                       title="Dark Mode"
-                    ><${Moon} size=${16}/></button>
+                    >
+                      <${Moon} size=${16} />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -523,47 +547,61 @@ export function TimerApp() {
 
       <${AddTimer} ref=${addTimerRef} onAdd=${handleAddTimer} />
 
-      ${timers.length > 0 ? html`
-        <div className="timer-list">
-          ${timers.map((timer, idx) => html`
-            <${TimerItem}
-              key=${timer.id}
-              timerCore=${timer}
-              onUpdate=${handleUpdateTimer}
-              onDelete=${() => handleDeleteTimer(timer.id)}
-              onDismiss=${handleDismissTimer}
-              onPresent=${handlePresentTimer}
-              isDragged=${draggedTimerId === timer.id}
-              isFocused=${focusedTimerId === timer.id}
-              onFocus=${() => {
-                focusedIndexRef.current = idx;
-                setFocusedTimerId(timer.id);
-              }}
-              onDragStart=${() => handleDragStart(timer.id)}
-              onDragEnter=${() => handleDragEnter(timer.id)}
-              onDragEnd=${handleDragEnd}
-            />
-          `)}
-        </div>
-      ` : html`
-        <div className="empty-state">
-          <${BellRing} size=${48} />
-          <h2>No Active Timers</h2>
-          <p>Press <kbd class="kbd-key-inline">N</kbd> or tap the button above to start a new timer.</p>
-        </div>
-      `}
+      ${timers.length > 0
+        ? html`
+            <div className="timer-list">
+              ${timers.map(
+                (timer, idx) => html`
+                  <${TimerItem}
+                    key=${timer.id}
+                    timerCore=${timer}
+                    onUpdate=${handleUpdateTimer}
+                    onDelete=${() => handleDeleteTimer(timer.id)}
+                    onDismiss=${handleDismissTimer}
+                    onPresent=${handlePresentTimer}
+                    isDragged=${draggedTimerId === timer.id}
+                    isFocused=${focusedTimerId === timer.id}
+                    onFocus=${() => {
+                      focusedIndexRef.current = idx;
+                      setFocusedTimerId(timer.id);
+                    }}
+                    onDragStart=${() => handleDragStart(timer.id)}
+                    onDragEnter=${() => handleDragEnter(timer.id)}
+                    onDragEnd=${handleDragEnd}
+                  />
+                `,
+              )}
+            </div>
+          `
+        : html`
+            <div className="empty-state">
+              <${BellRing} size=${48} />
+              <h2>No Active Timers</h2>
+              <p>
+                Press <kbd class="kbd-key-inline">N</kbd> or tap the button above to start a new
+                timer.
+              </p>
+            </div>
+          `}
     </div>
 
-    ${presentingTimerId ? (() => {
-      const presentingTimer = timers.find(t => t.id === presentingTimerId);
-      return presentingTimer ? html`
-        <${PresentationOverlay}
-          timerCore=${presentingTimer}
-          onUpdate=${handleUpdateTimer}
-          onDismiss=${(id) => { handleDismissTimer(id); setPresentingTimerId(null); }}
-          onClose=${() => setPresentingTimerId(null)}
-        />
-      ` : null;
-    })() : null}
+    ${presentingTimerId
+      ? (() => {
+          const presentingTimer = timers.find((t) => t.id === presentingTimerId);
+          return presentingTimer
+            ? html`
+                <${PresentationOverlay}
+                  timerCore=${presentingTimer}
+                  onUpdate=${handleUpdateTimer}
+                  onDismiss=${(id) => {
+                    handleDismissTimer(id);
+                    setPresentingTimerId(null);
+                  }}
+                  onClose=${() => setPresentingTimerId(null)}
+                />
+              `
+            : null;
+        })()
+      : null}
   `;
 }
