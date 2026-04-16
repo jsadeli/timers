@@ -9,7 +9,7 @@ import { AddTimer } from './AddTimer.js';
 import { TimerItem } from './TimerItem.js';
 import { KeyboardHelp } from './KeyboardHelp.js';
 import { PresentationOverlay } from './PresentationOverlay.js';
-import { Moon, Sun, Monitor, BellRing, BellOff, Settings } from '../icons.js';
+import { Moon, Sun, Monitor, BellRing, BellOff, Settings, Zap, Bird, Bell } from '../icons.js';
 
 /**
  * Root application component.
@@ -22,6 +22,7 @@ export function TimerApp() {
   const [timers, setTimers] = useState([]);
   const [theme, setTheme] = useState(ThemeManager.getTheme());
   const [timerFont, setTimerFont] = useState(FontManager.getFont());
+  const [alarmSound, setAlarmSound] = useState(() => StorageProvider.getSettings().alarmSound || 'default');
   const tickIntervalRef = useRef(null);
   const [draggedTimerId, setDraggedTimerId] = useState(null);
   const [isMuted, setIsMuted] = useState(() => StorageProvider.getSettings().isMuted || false);
@@ -57,6 +58,7 @@ export function TimerApp() {
 
   useEffect(() => {
     AlarmCoordinator.setIsMuted(isMuted);
+    AlarmCoordinator.setAlarmSound(alarmSound);
     const saved = StorageProvider.getTimers();
     const loadedTimers = saved.map(t => TimerCore.fromJSON(t));
     setTimers(loadedTimers);
@@ -205,6 +207,17 @@ export function TimerApp() {
   const changeFont = (fontId) => {
     FontManager.setFont(fontId);
     setTimerFont(fontId);
+  };
+
+  const changeAlarmSound = (sound) => {
+    setAlarmSound(sound);
+    AlarmCoordinator.setAlarmSound(sound);
+    const settings = StorageProvider.getSettings();
+    StorageProvider.saveSettings({ ...settings, alarmSound: sound });
+    
+    // Play preview
+    AlarmCoordinator.initAudio();
+    AlarmCoordinator.playChime();
   };
 
   const toggleMute = useCallback(() => {
@@ -458,6 +471,26 @@ export function TimerApp() {
                         style=${{ fontFamily: f.family }}
                       >0</button>
                     `)}
+                  </div>
+                </div>
+                <div className="system-dropdown-section">
+                  <span className="system-dropdown-label">Alarm Sound</span>
+                  <div className="theme-toggle">
+                    <button
+                      className=${`theme-btn ${alarmSound === 'default' ? 'active' : ''}`}
+                      onClick=${() => changeAlarmSound('default')}
+                      title="Default"
+                    ><${Bell} size=${16}/></button>
+                    <button
+                      className=${`theme-btn ${alarmSound === 'high-pitch' ? 'active' : ''}`}
+                      onClick=${() => changeAlarmSound('high-pitch')}
+                      title="High Pitch"
+                    ><${Zap} size=${16}/></button>
+                    <button
+                      className=${`theme-btn ${alarmSound === 'rooster' ? 'active' : ''}`}
+                      onClick=${() => changeAlarmSound('rooster')}
+                      title="Rooster"
+                    ><${Bird} size=${16}/></button>
                   </div>
                 </div>
                 <div className="system-dropdown-section">

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timers-v3';
+const CACHE_NAME = 'timers-v4';
 
 const PRECACHE_ASSETS = [
   './',
