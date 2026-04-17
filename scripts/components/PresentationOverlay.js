@@ -84,12 +84,7 @@ export function PresentationOverlay({ timerCore, onUpdate, onDismiss, onClose })
   };
 
   return html`
-    <div
-      className=${`presentation-overlay state-${timerCore.state}`}
-      onClick=${(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className=${`presentation-overlay state-${timerCore.state}`}>
       <button className="presentation-close" onClick=${onClose} title="Exit Presentation (Esc)">
         <${X} size=${22} />
       </button>
