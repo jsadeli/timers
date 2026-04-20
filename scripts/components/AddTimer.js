@@ -96,10 +96,8 @@ export const AddTimer = forwardRef(function AddTimer({ onAdd }, ref) {
   const formattedDisplay = () => {
     const padded = input.padStart(6, "0");
     return html`
-      ${padded.slice(0, 2)}<span className="time-unit">h</span> ${padded.slice(2, 4)}<span
-        className="time-unit"
-        >m</span
-      >
+      ${padded.slice(0, 2)}<span className="time-unit">h</span>
+      ${padded.slice(2, 4)}<span className="time-unit">m</span>
       ${padded.slice(4, 6)}<span className="time-unit">s</span>
     `;
   };
