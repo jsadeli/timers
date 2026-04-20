@@ -103,7 +103,7 @@ export function TimerApp() {
             const justFinished = t.tick();
             if (justFinished) {
               hasChanges = true;
-              AlarmCoordinator.startAlarm(t.id);
+              AlarmCoordinator.startAlarm(t.id, t.label || "Timer", "Time is up!");
             }
           }
           return t;

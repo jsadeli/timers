@@ -18,6 +18,9 @@ export class AlarmCoordinator {
         this.audioCtx = new AudioContext();
       }
     }
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().catch(console.error);
+    }
   }
 
   static setLoopDuration(ms) {
@@ -114,10 +117,28 @@ export class AlarmCoordinator {
     }
   }
 
-  static startAlarm(timerId) {
+  static startAlarm(timerId, title = "Timer Finished", body = "Time is up!") {
     this.initAudio();
 
     if (this.activeAlerts.has(timerId)) return;
+
+    let notificationObj = null;
+    if ("Notification" in window && Notification.permission === "granted") {
+      try {
+        notificationObj = new Notification(title, {
+          body,
+          icon: "assets/icon.svg",
+          requireInteraction: true
+        });
+        
+        notificationObj.onclick = () => {
+          window.focus();
+          notificationObj.close();
+        };
+      } catch (e) {
+        console.error("Failed to show notification", e);
+      }
+    }
 
     // Play immediately
     this.playChime();
@@ -130,14 +151,17 @@ export class AlarmCoordinator {
       this.stopAlarm(timerId);
     }, this.loopDurationMs);
 
-    this.activeAlerts.set(timerId, { intervalId, timeoutId });
+    this.activeAlerts.set(timerId, { intervalId, timeoutId, notification: notificationObj });
   }
 
   static stopAlarm(timerId) {
     if (this.activeAlerts.has(timerId)) {
-      const { intervalId, timeoutId } = this.activeAlerts.get(timerId);
+      const { intervalId, timeoutId, notification } = this.activeAlerts.get(timerId);
       clearInterval(intervalId);
       clearTimeout(timeoutId);
+      if (notification) {
+        notification.close();
+      }
       this.activeAlerts.delete(timerId);
     }
   }
